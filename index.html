@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mamadou Djouhe Bah · Full Stack Developer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['"Work Sans"', 'system-ui', 'sans-serif'] },
+        colors: {
+          brand: { 50:'#f0fdf4', 100:'#dcfce7', 500:'#22c55e', 600:'#16a34a', 700:'#15803d', 800:'#166534' }
+        }
+      }
+    }
+  }
+  // apply saved theme before paint
+  if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+</script>
+<style>
+  body { background:#fefefc; }
+  .dark body { background:#0e110f; }
+  .card { border:1px solid rgba(0,0,0,.07); background:#fbfcfa; border-radius:1.5rem; }
+  .dark .card { border-color:rgba(255,255,255,.08); background:#151a17; }
+  :focus-visible { outline:2px solid #16a34a; outline-offset:2px; }
+  .ico { display:block; width:2.25rem; height:2.25rem; background-color:#171717;
+  -webkit-mask:var(--i) center/contain no-repeat; mask:var(--i) center/contain no-repeat;
+  transition:background-color .2s, transform .2s; }
+.dark .ico { background-color:#e5e5e5; }
+.skill:hover .ico { background-color:#16a34a; transform:translateY(-2px); }
+.skill:hover .lbl { color:#16a34a; }
+.badge { width:2.25rem; height:2.25rem; display:flex; align-items:center; justify-content:center;
+  border:2px solid currentColor; border-radius:.5rem; font-weight:700; transition:color .2s, transform .2s; }
+.skill:hover .badge { color:#16a34a; transform:translateY(-2px); }
+/* ---- Bigger body text (headings unchanged) ---- */
+#home p.text-xl { font-size:1.5rem !important; line-height:2rem !important; }
+[data-i18n="role_line"], [data-i18n="slogan"] { font-size:1.125rem !important; line-height:1.75rem !important; }
+[data-i18n="about_p1"], [data-i18n="about_p2"] { font-size:1.1875rem !important; line-height:1.8 !important; }
+[data-i18n="lang_l"], [data-i18n="lang_fr"], [data-i18n="lang_en"] { font-size:.9375rem !important; }
+#skillGrid .lbl { font-size:.9375rem !important; }
+#processGrid p, #principleGrid p { font-size:1rem !important; line-height:1.7 !important; }
+#experience li, [data-i18n$="_deg"] { font-size:1.125rem !important; line-height:1.75 !important; }
+[data-i18n$="_r"], [data-i18n$="_d"] { font-size:1rem !important; }
+[data-i18n="ct_p"] { font-size:1.25rem !important; line-height:1.75rem !important; }
+</style>
+</head>
+<body class="font-sans text-neutral-900 dark:text-neutral-100 antialiased">
+
+<!-- Top bar: timezone (left) · nav (center) · language + time (right) -->
+<div class="fixed top-0 inset-x-0 z-40 px-4 pt-3 flex items-start justify-between pointer-events-none">
+  <span id="tz" class="text-sm pointer-events-auto hidden sm:block mt-2"></span>
+
+  <nav class="pointer-events-auto mx-auto flex items-center gap-1 rounded-full border border-black/10 dark:border-white/10 bg-white/90 dark:bg-neutral-900/90 backdrop-blur shadow-lg px-3 py-2 text-sm">
+    <a href="#home" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_home">Home</a>
+    <a href="#skills" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_skills">Skills</a>
+    <a href="#experience" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_exp">Experience</a>
+        <a href="#education" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_edu">Education</a>
+    <a href="#contact" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_contact">Contact</a>
+    <a id="resumeLink" href="resume-en.pdf" target="_blank" rel="noopener" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_resume">Resume</a>
+    <span class="w-px h-5 bg-black/10 dark:bg-white/10 mx-1"></span>
+    <button id="themeBtn" aria-label="Toggle dark mode" class="px-2 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10">
+      <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
+    </button>
+  </nav>
+
+  <!-- Language switch sits just above the time -->
+  <div class="pointer-events-auto flex flex-col items-end gap-1 text-sm">
+    <div class="inline-flex rounded-full border border-black/10 dark:border-white/10 overflow-hidden" role="group" aria-label="Language">
+      <button data-lang="en" class="lang-btn px-3 py-0.5 font-semibold">EN</button>
+      <button data-lang="fr" class="lang-btn px-3 py-0.5 font-semibold">FR</button>
+    </div>
+    <span id="clock" class="tabular-nums"></span>
+  </div>
+</div>
+
+<main>
+  <!-- Hero -->
+  <section id="home" class="flex flex-col items-center justify-center text-center px-6 pt-40 pb-8">
+    <a href="https://cal.com/mamadou-djouhe-bah-suhu4i" target="_blank" rel="noopener"
+      class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-xs mb-10 hover:border-brand-600 hover:bg-brand-50 dark:hover:bg-white/5 transition">
+      <span class="relative flex w-2 h-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-500 opacity-60"></span>
+        <span class="relative inline-flex w-2 h-2 rounded-full bg-brand-500"></span>
+      </span>
+      <span data-i18n="open">Open to work</span>
+    </a>
+    <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight leading-[1.05]">
+      <span data-i18n="h1a">Building reliable</span> <span class="text-brand-700 dark:text-brand-500" data-i18n="h1b">software</span><br />
+      <span data-i18n="h1c">Delivering</span> <span class="text-brand-700 dark:text-brand-500" data-i18n="h1d">results</span>
+    </h1>
+    <p class="mt-10 text-xl text-neutral-600 dark:text-neutral-400">
+      <span data-i18n="im">I'm</span> <span class="text-brand-700 dark:text-brand-500">Mamadou Djouhe Bah</span><br />
+      <span data-i18n="tagline">I build applications that matter.</span>
+    </p>
+    <p class="mt-12 max-w-2xl text-sm sm:text-base leading-relaxed text-neutral-500" data-i18n="role_line">Full-Stack Developer | React Native & Next.js | Software Developer | Data Analyst | Senior Sales Representative | French Bilingual CSR | Quality Assurance Software Tester (Manual & Automation with Playwright) | Building Software Solutions for a Better Future</p>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="max-w-5xl mx-auto px-6 pt-8 pb-16 grid md:grid-cols-[220px_1fr] gap-12 items-start">
+    <div class="flex flex-col items-center gap-4">
+      <!-- Replace this block with: <img src="photo.jpg" class="w-44 h-44 rounded-full object-cover" alt="Mamadou"> -->
+      <img src="me.JPG" alt="Mamadou Djouhe Bah" class="w-44 h-44 rounded-full object-cover object-top border border-black/10 dark:border-white/10" />
+      <div class="flex flex-col items-center gap-2 text-xs">
+        <span class="text-neutral-500" data-i18n="lang_l">Languages spoken:</span>
+        <div class="flex gap-2">
+          <span class="rounded-full border border-black/10 dark:border-white/10 px-3 py-0.5" data-i18n="lang_fr">French</span>
+          <span class="rounded-full border border-black/10 dark:border-white/10 px-3 py-0.5" data-i18n="lang_en">English</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="about_l">About me</p>
+      <h2 class="text-4xl font-bold mt-2 leading-tight" data-i18n="about_h">Developer at heart, problem solver by habit.</h2>
+      <p class="mt-6 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-prose" data-i18n="about_p1"></p>
+      <p class="mt-4 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-prose" data-i18n="about_p2"></p>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="sk_l">Technical skills</p>
+    <h2 class="text-4xl font-bold mt-2" data-i18n="sk_h">The technologies I use.</h2>
+    <div id="skillGrid" class="mt-12 grid md:grid-cols-2 gap-5"></div>
+  </section>
+
+  <!-- Process -->
+  <section id="process" class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="pr_l">How I work</p>
+    <h2 class="text-4xl font-bold mt-2" data-i18n="pr_h">A simple, dependable process I follow on every project.</h2>
+    <div id="processGrid" class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+  </section>
+
+  <!-- Principles -->
+  <section id="principles" class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="pc_l">What I care about</p>
+    <h2 class="text-4xl font-bold mt-2" data-i18n="pc_h">The principles that guide how I build.</h2>
+    <div id="principleGrid" class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="max-w-5xl mx-auto px-6 py-16">
+    <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="ex_l">Experience</p>
+    <h2 class="text-4xl font-bold mt-2" data-i18n="ex_h">Where I've built and shipped.</h2>
+    <div class="mt-12 space-y-5">
+            <article class="card p-7 flex gap-5">
+        <img src="enov8tive.png" alt="enov8tive logo" class="w-14 h-14 rounded-full object-contain shrink-0" />
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between gap-2">
+            <h3 class="text-xl font-bold">enov8tive</h3>
+            <span class="text-sm text-neutral-500" data-i18n="ex1_d">Aug 2026 – Present</span>
+          </div>
+          <p class="text-sm text-brand-700 dark:text-brand-500 mt-1" data-i18n="ex1_r">Technology Intern</p>
+          <ul class="mt-4 space-y-2 text-neutral-600 dark:text-neutral-400 list-disc marker:text-brand-600 pl-5">
+            <li data-i18n="ex1_b1">Web & mobile development: building secure APIs, responsive frontends, backends and mobile-optimized layouts.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card p-7 flex gap-5">
+        <img src="telus.png" alt="TELUS Digital logo" class="w-14 h-14 rounded-xl object-contain shrink-0" />
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between gap-2">
+            <h3 class="text-xl font-bold">TELUS Digital</h3>
+            <span class="text-sm text-neutral-500" data-i18n="ex2_d">Mar 2021 – Present</span>
+          </div>
+          <p class="text-sm text-brand-700 dark:text-brand-500 mt-1" data-i18n="ex2_r">Operations Sales Representative – Senior</p>
+          <ul class="mt-4 space-y-2 text-neutral-600 dark:text-neutral-400 list-disc marker:text-brand-600 pl-5">
+            <li data-i18n="ex2_b1"></li>
+            <li data-i18n="ex2_b2"></li>
+            <li data-i18n="ex2_b3"></li>
+            <li data-i18n="ex2_b4"></li>
+            <li data-i18n="ex2_b5"></li>
+            <li data-i18n="ex2_b6"></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+    <!-- Education -->
+  <section id="education" class="max-w-5xl mx-auto px-6 pt-4 pb-24">
+    <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="ed_l">Education</p>
+    <h2 class="text-4xl font-bold mt-2" data-i18n="ed_h">Where I studied.</h2>
+    <div class="mt-12 space-y-5">
+      <article class="card p-7 flex gap-5">
+        <img src="apc.png" alt="Asia Pacific College logo" class="w-14 h-14 rounded-full object-contain shrink-0" />
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between gap-2">
+            <h3 class="text-xl font-bold">Asia Pacific College</h3>
+            <span class="text-sm text-neutral-500" data-i18n="ed1_d">Aug 2022 – Oct 2026</span>
+          </div>
+          <p class="mt-2 text-neutral-600 dark:text-neutral-400" data-i18n="ed1_deg"></p>
+        </div>
+      </article>
+
+      <article class="card p-7 flex gap-5">
+        <img src="gamal.png" alt="Gamal Abdel Nasser University of Conakry logo" class="w-14 h-14 rounded-xl object-contain shrink-0" />
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between gap-2">
+            <h3 class="text-xl font-bold" data-i18n="ed2_n">Gamal Abdel Nasser University of Conakry</h3>
+            <span class="text-sm text-neutral-500" data-i18n="ed2_d">Nov 2017 – Mar 2019</span>
+          </div>
+          <p class="mt-2 text-neutral-600 dark:text-neutral-400" data-i18n="ed2_deg"></p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+    <!-- Projects -->
+  <section id="projects" class="max-w-5xl mx-auto px-6 pt-4 pb-24">
+    <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="pj_l">Projects</p>
+    <h2 class="text-4xl font-bold mt-2" data-i18n="pj_h">What I've built.</h2>
+    <div class="mt-12 space-y-5">
+
+      <article class="card p-7">
+        <h3 class="text-xl font-bold">Serial Subscription Tracking System</h3>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Web Development</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Figma</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">System Analysis</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Agile Scrum</span>
+        </div>
+        <p class="mt-4 text-neutral-600 dark:text-neutral-400" data-i18n="pj1_deg"></p>
+      </article>
+
+      <article class="card p-7">
+        <h3 class="text-xl font-bold">Trusted Loan Network PH – Automated Loan Management System</h3>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Frappe Framework</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Frappe CRM</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Python</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">JavaScript</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">MariaDB</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">EasyOCR</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Frappe Cloud</span>
+        </div>
+        <p class="mt-4 text-neutral-600 dark:text-neutral-400" data-i18n="pj2_deg"></p>
+      </article>
+
+      <article class="card p-7">
+        <h3 class="text-xl font-bold">PH Open Health Stack Project</h3>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">React Native (Expo)</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">TypeScript</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">SQLite</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">HAPI FHIR</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">PostgreSQL</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">OpenHIM</span>
+          <span class="rounded-full bg-brand-50 dark:bg-brand-800/30 text-brand-800 dark:text-brand-100 px-3 py-1 text-xs">Supabase</span>
+        </div>
+        <p class="mt-4 text-neutral-600 dark:text-neutral-400" data-i18n="pj3_deg"></p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="px-6 py-24">
+    <div class="card max-w-xl mx-auto px-8 py-14 flex flex-col items-center text-center">
+      <p class="text-sm text-brand-700 dark:text-brand-500" data-i18n="ct_l">Get in touch</p>
+      <h2 class="text-4xl sm:text-5xl font-bold mt-4" data-i18n="ct_h">Let's work together</h2>
+      <p class="mt-5 max-w-sm text-lg text-neutral-600 dark:text-neutral-400" data-i18n="ct_p">Have a project in mind or just want to say hello? I'm always open to new opportunities and collaborations.</p>
+
+      <!-- Email button -->
+      <a href="mailto:djouheoumou@gmail.com" class="mt-8 inline-flex items-center gap-3 rounded-full bg-black dark:bg-white text-white dark:text-black px-6 py-3 font-semibold">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        djouheoumou@gmail.com
+      </a>
+
+      <!-- Schedule a call -->
+      <a href="https://cal.com/mamadou-djouhe-bah-suhu4i" target="_blank" rel="noopener"
+         class="mt-6 inline-flex items-center gap-2 text-brand-700 dark:text-brand-500 font-medium hover:underline">
+        <span data-i18n="ct_sched">Schedule a call</span>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+
+      <!-- Social icons -->
+      <div class="mt-8 flex justify-center gap-3">
+        <a href="https://github.com/mamadbah" target="_blank" rel="noopener" aria-label="GitHub"
+           class="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-800/40 flex items-center justify-center hover:bg-brand-600 hover:text-white transition">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/mamadou-djouhe-bah-5b01691b2/" target="_blank" rel="noopener" aria-label="LinkedIn"
+           class="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-800/40 flex items-center justify-center hover:bg-brand-600 hover:text-white transition">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="text-center text-sm text-neutral-500 pb-10">© 2026 Mamadou Djouhe Bah</footer>
+
+<script>
+const I18N = {
+  en: {
+    nav_home:'Home', nav_skills:'Skills', nav_exp:'Experience', nav_edu:'Education', nav_contact:'Contact', nav_resume:'Resume',
+    open:'Open to work', h1a:'Building reliable', h1b:'software', h1c:'Delivering', h1d:'results',
+    im:"I'm", tagline:'I build applications that matter.', btn_work:'View my experience', btn_contact:'Contact me',
+    role_line:'Full-Stack Developer | React Native & Next.js | Software Developer | Data Analyst | Senior Sales Representative | French Bilingual CSR | Quality Assurance Software Tester (Manual & Automation with Playwright) | Building Software Solutions for a Better Future',
+    about_l:'About me', about_h:'Developer at heart, problem solver by habit.',
+    lang_l:'Languages spoken:', lang_fr:'French', lang_en:'English',
+    about_p1:"I'm an IT graduate with a strong background in software development. I deliver great results through my commitment and work ethic. I'm also a highly motivated and experienced French bilingual Senior Sales Representative.",
+    about_p2:'I work from designing intuitive interfaces to implementing business logic and finally making it publicly accessible.',
+    sk_l:'Technical skills', sk_h:'The technologies I use.',
+    sk1:'Languages & Frameworks', sk2:'Backend & Database', sk3:'Tools & Platforms', sk4:'Analytics & Automation',
+    pr_l:'How I work', pr_h:'A simple, dependable process I follow on every project.',
+    pc_l:'What I care about', pc_h:'The principles that guide how I build.',
+    ex_l:'Experience', ex_h:"Where I've built and shipped.",
+    ex1_d:'Aug 2026 – Present', ex1_r:'Technology Intern',
+    ex1_b1:"Web & Mobile Development: Designing, developing, and maintaining secure, responsive, and user-friendly web and mobile applications. Building robust APIs and backend services, integrating databases, implementing authentication and data protection, and creating mobile-optimized interfaces that ensure smooth performance, accessibility, and a consistent user experience across different devices and platforms.",
+    ex2_d:'Mar 2021 – Present', ex2_r:'Operations Sales Representative – Senior',
+    ex2_b1:"Handle inbound customer inquiries in French and English, providing customer support, technical assistance, and sales solutions.",
+    ex2_b2:"Promote and sell Mobility, Internet and TV, Wireless Home Phone, TELUS Online Security, and SmartHome Security services.",
+    ex2_b3:"Identify sales opportunities through needs analysis, cross-selling, and upselling to increase revenue.",
+    ex2_b4:"Assist with billing, account management, service activation, plan changes, and troubleshooting.",
+    ex2_b5:"Explain product features, pricing, and promotions to help customers make informed decisions.",
+    ex2_b6:"Maintain high customer satisfaction, achieve sales targets and KPIs, and ensure compliance with company policies.",
+    ed_l:'Education', ed_h:'Where I studied.',
+    ed1_d:'Aug 2022 – Oct 2026',
+    ed1_deg:'BS Information Technology, specialized in Mobile and Internet Technologies',
+    ed2_n:'Gamal Abdel Nasser University of Conakry',
+    ed2_d:'Nov 2017 – Mar 2019',
+    ed2_deg:'Mathematics',
+    pj_l:'Projects', pj_h:"What I've built.",
+    pj1_deg:"Designed a web-based platform to automate serial subscription tracking, delivery monitoring, and reporting for DOST-STII Library, featuring role-based access, supplier communication, automated notifications, and delivery status dashboards.",
+    pj2_deg:"Developed a centralized web-based loan management platform featuring OCR-powered government ID data extraction, automated application workflows, integrated CRM communication, and role-based dashboards to streamline loan processing and improve operational efficiency.",
+    pj3_deg:"Developed an offline-first mobile and web platform that replaces the spreadsheet and Google Apps Script tools used by Navotas City Hospital and its health center network for patient referrals and records. The platform lets facilities that run different systems exchange data using the HL7 FHIR R4 standard. Contributed by implementing and testing modules such as facility onboarding, transaction authentication and routing, message transformation to FHIR, patient account linking, offline record sync, and encrypted QR-based patient summary sharing.",
+    ct_l:'Get in touch', ct_h:"Let's work together",
+    ct_p:"Have a project in mind or just want to say hello? I'm always open to new opportunities and collaborations.",
+    ct_sched:'Schedule a call →',
+    process:[
+      ['Understand','I start by understanding the problem, the users and the outcome we actually want.'],
+      ['Plan','I break the work into manageable tasks and choose the right technologies.'],
+      ['Build','I develop with an emphasis on maintainability, usability and clean code.'],
+      ['Test & Refine','I test, find issues, gather feedback and keep improving.'],
+      ['Deliver','I make sure the product is usable, reliable and ready to deploy.'],
+      ['Maintain','I monitor the live product, fix issues and apply updates as needs evolve.']
+    ],
+    principles:[
+      ['User-centered','Software should serve the people who use it, not the other way around.'],
+      ['Accessibility','Great products work for everyone, however they access them.'],
+      ['Security','Robust authentication, access control and safe handling of sensitive data.'],
+      ['Clean code','Readable, maintainable code the next developer will thank me for.'],
+      ['Collaboration','The best solutions come from listening, sharing and building together.'],
+      ['Always learning','Technology moves fast, so I keep sharpening what I know.']
+    ]
+  },
+  fr: {
+    nav_home:'Accueil', nav_skills:'Compétences', nav_exp:'Expérience', nav_edu:'Formation', nav_contact:'Contact', nav_resume:'CV',
+    open:'Disponible', h1a:'Créer des logiciels', h1b:'fiables', h1c:'Livrer des', h1d:'résultats',
+    im:'Je suis', tagline:'Je crée des applications qui comptent.', btn_work:'Voir mon expérience', btn_contact:'Me contacter',
+    role_line:'Développeur Full Stack | React Native & Next.js | Développeur logiciel | Analyste de données | Représentant commercial senior | Conseiller clientèle bilingue français | Testeur QA logiciel (manuel et automatisé avec Playwright) | Créer des solutions logicielles pour un avenir meilleur',
+    lang_l:'Langues parlées :', lang_fr:'Français', lang_en:'Anglais',
+    about_l:'À propos', about_h:'Développeur dans l’âme, résolveur de problèmes par habitude.',
+    about_p1:"Je suis diplômé en informatique avec une solide expérience en développement logiciel. J'obtiens d'excellents résultats grâce à mon engagement et à mon éthique de travail. Je suis également un représentant commercial senior bilingue français-anglais, très motivé et expérimenté.",
+    about_p2:"Je travaille de la conception d'interfaces intuitives à la mise en œuvre de la logique métier, jusqu'à la mise en ligne publique.",
+    sk_l:'Compétences techniques', sk_h:'Les technologies que j’utilise.',
+    sk1:'Langages & Frameworks', sk2:'Backend & Base de données', sk3:'Outils & Plateformes', sk4:'Analyse & Automatisation',
+    pr_l:'Ma méthode', pr_h:'Un processus simple et fiable, suivi sur chaque projet.',
+    pc_l:'Mes valeurs', pc_h:'Les principes qui guident ma façon de développer.',
+    ex_l:'Expérience', ex_h:'Là où j’ai conçu et livré.',
+    ex1_d:'Août 2026 – Présent', ex1_r:'Stagiaire en technologie',
+    ex1_b1:"Développement web et mobile : conception, développement et maintenance d'applications web et mobiles sécurisées, responsives et conviviales. Création d'API et de services backend robustes, intégration de bases de données, mise en place de l'authentification et de la protection des données, et création d'interfaces optimisées pour mobile garantissant des performances fluides, l'accessibilité et une expérience cohérente sur tous les appareils et plateformes.",
+    ex2_d:'Mars 2021 – Présent', ex2_r:'Représentant commercial des opérations – Senior',
+    ex2_b1:"Traiter les demandes entrantes des clients en français et en anglais, en offrant du soutien à la clientèle, de l'assistance technique et des solutions de vente.",
+    ex2_b2:"Promouvoir et vendre les services Mobilité, Internet et TV, Téléphonie résidentielle sans fil, Sécurité en ligne TELUS et Sécurité SmartHome.",
+    ex2_b3:"Repérer les occasions de vente par l'analyse des besoins, la vente croisée et la vente incitative afin d'augmenter les revenus.",
+    ex2_b4:"Aider pour la facturation, la gestion de compte, l'activation des services, les changements de forfait et le dépannage.",
+    ex2_b5:"Expliquer les caractéristiques des produits, les prix et les promotions pour aider les clients à décider en connaissance de cause.",
+    ex2_b6:"Maintenir un haut niveau de satisfaction client, atteindre les objectifs de vente et les indicateurs clés, et respecter les politiques de l'entreprise.",
+    ed_l:'Formation', ed_h:'Là où j’ai étudié.',
+    ed1_d:'Août 2022 – Oct. 2026',
+    ed1_deg:'Licence en technologies de l’information, spécialisation en technologies mobiles et Internet',
+    ed2_n:'Université Gamal Abdel Nasser de Conakry',
+    ed2_d:'Nov. 2017 – Mars 2019',
+    ed2_deg:'Mathématiques',
+    pj_l:'Projets', pj_h:"Ce que j'ai réalisé.",
+    pj1_deg:"Conception d'une plateforme web pour automatiser le suivi des abonnements aux publications en série, le suivi des livraisons et les rapports de la bibliothèque du DOST-STII, avec accès par rôle, communication avec les fournisseurs, notifications automatiques et tableaux de bord de l'état des livraisons.",
+    pj2_deg:"Développement d'une plateforme web centralisée de gestion de prêts avec extraction par OCR des données de pièces d'identité gouvernementales, flux de demandes automatisés, communication CRM intégrée et tableaux de bord par rôle pour accélérer le traitement des prêts et améliorer l'efficacité opérationnelle.",
+    pj3_deg:"Développement d'une plateforme mobile et web hors ligne qui remplace les feuilles de calcul et les outils Google Apps Script utilisés par l'hôpital de la ville de Navotas et son réseau de centres de santé pour les références et les dossiers des patients. La plateforme permet à des établissements utilisant des systèmes différents d'échanger des données grâce à la norme HL7 FHIR R4. Contribution : mise en œuvre et test de modules tels que l'intégration des établissements, l'authentification et le routage des transactions, la transformation des messages vers FHIR, la liaison des comptes patients, la synchronisation hors ligne des dossiers et le partage chiffré de résumés patients par code QR.",
+    ct_l:'Me contacter', ct_h:'Travaillons ensemble',
+    ct_p:"Un projet en tête ou simplement envie de dire bonjour ? Je suis toujours ouvert aux nouvelles opportunités et collaborations.",
+    ct_sched:'Planifier un appel →',
+    process:[
+      ['Comprendre',"Je commence par comprendre le problème, les utilisateurs et le résultat réellement souhaité."],
+      ['Planifier','Je découpe le travail en tâches gérables et je choisis les bonnes technologies.'],
+      ['Construire','Je développe en privilégiant la maintenabilité, la facilité d’usage et un code propre.'],
+      ['Tester & Affiner','Je teste, repère les problèmes, recueille des retours et améliore sans cesse.'],
+      ['Livrer','Je m’assure que le produit est utilisable, fiable et prêt à être déployé.'],
+      ['Maintenir','Je surveille le produit en production, corrige les problèmes et applique les mises à jour.']
+    ],
+    principles:[
+      ['Centré utilisateur','Le logiciel doit servir ceux qui l’utilisent, et non l’inverse.'],
+      ['Accessibilité','Un bon produit fonctionne pour tous, quel que soit leur moyen d’accès.'],
+      ['Sécurité','Authentification robuste, contrôle d’accès et gestion sûre des données sensibles.'],
+      ['Code propre','Un code lisible et maintenable dont le prochain développeur me remerciera.'],
+      ['Collaboration','Les meilleures solutions viennent de l’écoute, du partage et du travail en équipe.'],
+      ['Toujours apprendre','La technologie évolue vite, alors je continue d’affûter mes connaissances.']
+    ]
+  }
+};
+
+const CDN = 'https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons/';
+const CLAUDE = 'data:image/svg+xml,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.6" stroke-linecap="round">' +
+  '<path d="M15.5 12H23M15.03 13.75L19.36 16.25M13.75 15.03L17.5 21.53M12 15.5V20.5M10.25 15.03L6.5 21.53M8.97 13.75L4.64 16.25M8.5 12H1M8.97 10.25L4.64 7.75M10.25 8.97L6.5 2.47M12 8.5V3.5M13.75 8.97L17.5 2.47M15.03 10.25L19.36 7.75"/>' +
+  '</svg>'
+);
+const SKILLS = [
+  ['sk1', [['JavaScript','javascript'],['TypeScript','typescript'],['React','react'],['Next.js','nextdotjs'],['Tailwind CSS','tailwindcss'],['Python','python'],['R','r'],['Java','openjdk'],['PHP','php'],['Kotlin','kotlin'],['Laravel','laravel'],['Django','django']]],
+  ['sk2', [['Node.js','nodedotjs'],['PostgreSQL','postgresql'],['MySQL','mysql'],['MongoDB','mongodb'],['MariaDB','mariadb'],['Supabase','supabase'],['Redis','redis'],['Prisma','prisma']]],
+  ['sk3', [['Figma','figma'],['GitHub','github'],['Docker','docker'],['Vercel','vercel'],['Claude','claude'],['Antigravity',null]]],
+  ['sk4', [['Power BI','powerbi'],['Weka',null],['Tableau','tableau']]]
+];
+
+const PRINCIPLE_ICONS = [
+  '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  '<circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="M4.24 14.5a5 5 0 0 0 6.88 6"/><path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>',
+  '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  '<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>',
+  '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+  '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>'
+];
+
+let lang = localStorage.getItem('lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
+
+function render() {
+  const d = I18N[lang];
+  document.getElementById('resumeLink').href = lang === 'fr' ? 'resume-fr.pdf' : 'resume-en.pdf';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { if (d[el.dataset.i18n]) el.textContent = d[el.dataset.i18n]; });
+
+    document.getElementById('skillGrid').innerHTML = SKILLS.map(([key, items]) => `
+    <div class="card p-7">
+      <h3 class="font-bold text-lg">${d[key]}</h3>
+      <div class="mt-5 grid grid-cols-3 gap-2">
+        ${items.map(([name, slug]) => `
+          <div class="skill flex flex-col items-center gap-3 rounded-2xl p-4 cursor-default transition hover:bg-brand-50 dark:hover:bg-white/5" title="${name}">
+            ${slug ? `<span class="ico" style="--i:url(${slug === 'claude' ? CLAUDE : CDN + slug + '.svg'})"></span>` : `<span class="badge">${name[0]}</span>`}
+            <span class="lbl text-xs text-center text-neutral-600 dark:text-neutral-400 transition-colors">${name}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('processGrid').innerHTML = d.process.map(([t, p], i) => `
+    <div class="card p-7">
+      <div class="text-3xl font-extrabold text-brand-700 dark:text-brand-500">0${i + 1}</div>
+      <h3 class="font-bold mt-3">${t}</h3>
+      <p class="mt-2 text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">${p}</p>
+    </div>`).join('');
+
+    document.getElementById('principleGrid').innerHTML = d.principles.map(([t, p], i) => `
+    <div class="card group p-7 transition hover:border-brand-600/50">
+      <svg class="w-8 h-8 mb-4 text-neutral-700 dark:text-neutral-300 group-hover:text-brand-600 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${PRINCIPLE_ICONS[i]}</svg>
+      <h3 class="font-bold">${t}</h3>
+      <p class="mt-2 text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">${p}</p>
+    </div>`).join('');
+
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const on = b.dataset.lang === lang;
+    b.className = 'lang-btn px-3 py-0.5 font-semibold ' + (on ? 'bg-brand-700 text-white' : 'hover:bg-brand-50 dark:hover:bg-white/10');
+    b.setAttribute('aria-pressed', on);
+  });
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => b.addEventListener('click', () => {
+  lang = b.dataset.lang; localStorage.setItem('lang', lang); render();
+}));
+
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const dark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+});
+
+// Clock + timezone (uses the visitor's own timezone; change to 'Asia/Manila' if you prefer a fixed one)
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+document.getElementById('tz').textContent = tz;
+function tick() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+}
+tick(); setInterval(tick, 1000);
+
+render();
+</script>
+</body>
+</html>
