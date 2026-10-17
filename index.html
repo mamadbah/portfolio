@@ -46,29 +46,42 @@
 #experience li, [data-i18n$="_deg"] { font-size:1.125rem !important; line-height:1.75 !important; }
 [data-i18n$="_r"], [data-i18n$="_d"] { font-size:1rem !important; }
 [data-i18n="ct_p"] { font-size:1.25rem !important; line-height:1.75rem !important; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+section[id] { scroll-margin-top: 5rem; }
+
+@media (max-width: 639px) {
+  .mnav {
+    position: fixed;
+    left: .75rem;
+    right: .75rem;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + .75rem);
+  }
+  body { padding-bottom: 5rem; }
+}
 </style>
 </head>
 <body class="font-sans text-neutral-900 dark:text-neutral-100 antialiased">
 
-<!-- Top bar: timezone (left) · nav (center) · language + time (right) -->
-<div class="fixed top-0 inset-x-0 z-40 px-4 pt-3 flex items-start justify-between pointer-events-none">
+<!-- Top bar: timezone (left) · nav (center, bottom bar on phones) · language + time (right) -->
+<div class="fixed top-0 inset-x-0 z-40 topbar px-3 sm:px-4 flex items-start justify-end sm:justify-between pointer-events-none">
   <span id="tz" class="text-sm pointer-events-auto hidden sm:block mt-2"></span>
 
-  <nav class="pointer-events-auto mx-auto flex items-center gap-1 rounded-full border border-black/10 dark:border-white/10 bg-white/90 dark:bg-neutral-900/90 backdrop-blur shadow-lg px-3 py-2 text-sm">
-    <a href="#home" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_home">Home</a>
-    <a href="#skills" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_skills">Skills</a>
-    <a href="#experience" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_exp">Experience</a>
-        <a href="#education" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_edu">Education</a>
-    <a href="#contact" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_contact">Contact</a>
-    <a id="resumeLink" href="resume-en.pdf" target="_blank" rel="noopener" class="px-3 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_resume">Resume</a>
-    <span class="w-px h-5 bg-black/10 dark:bg-white/10 mx-1"></span>
+  <nav class="mnav pointer-events-auto flex flex-nowrap items-center justify-between sm:justify-center overflow-x-auto no-scrollbar sm:gap-1 rounded-full border border-black/10 dark:border-white/10 bg-white/90 dark:bg-neutral-900/90 backdrop-blur shadow-lg px-1.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-sm sm:mx-auto">
+    <a href="#home" class="px-2 sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_home">Home</a>
+    <a href="#skills" class="px-2 sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_skills">Skills</a>
+    <a href="#experience" class="px-2 sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_exp">Experience</a>
+    <a href="#education" class="px-2 sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_edu">Education</a>
+    <a href="#contact" class="px-2 sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_contact">Contact</a>
+    <a id="resumeLink" href="resume-en.pdf" target="_blank" rel="noopener" class="px-2 sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_resume">Resume</a>
+    <span class="hidden sm:block w-px h-5 bg-black/10 dark:bg-white/10 mx-1"></span>
     <button id="themeBtn" aria-label="Toggle dark mode" class="px-2 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10">
       <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
     </button>
   </nav>
 
-  <!-- Language switch sits just above the time -->
-  <div class="pointer-events-auto flex flex-col items-end gap-1 text-sm">
+  <!-- Language switch just above the time (one small row on phones) -->
+  <div class="pointer-events-auto flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1 text-xs sm:text-sm rounded-full sm:rounded-none bg-white/90 dark:bg-neutral-900/90 sm:bg-transparent sm:dark:bg-transparent px-2 py-1 sm:p-0 shadow sm:shadow-none">
     <div class="inline-flex rounded-full border border-black/10 dark:border-white/10 overflow-hidden" role="group" aria-label="Language">
       <button data-lang="en" class="lang-btn px-3 py-0.5 font-semibold">EN</button>
       <button data-lang="fr" class="lang-btn px-3 py-0.5 font-semibold">FR</button>
@@ -79,7 +92,7 @@
 
 <main>
   <!-- Hero -->
-  <section id="home" class="flex flex-col items-center justify-center text-center px-6 pt-40 pb-8">
+  <section id="home" class="flex flex-col items-center justify-center text-center px-6 pt-24 pb-8">
     <a href="https://cal.com/mamadou-djouhe-bah-suhu4i" target="_blank" rel="noopener"
       class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-xs mb-10 hover:border-brand-600 hover:bg-brand-50 dark:hover:bg-white/5 transition">
       <span class="relative flex w-2 h-2">
