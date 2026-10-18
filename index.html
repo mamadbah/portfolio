@@ -74,6 +74,14 @@ section[id] { scroll-margin-top: 5rem; }
 .dark .tile-on .ico { background-color:#22c55e !important; color:#22c55e !important; }
 .tile-on .badge { color:#15803d !important; border-color:#15803d !important; }
 .dark .tile-on .badge { color:#22c55e !important; border-color:#22c55e !important; }
+
+/* Card highlight on hover (laptop) */
+@media (hover: hover) {
+  .card:hover { border-color:#15803d; box-shadow:0 10px 28px -12px rgba(21,128,61,.45); }
+  .dark .card:hover { border-color:#22c55e; box-shadow:0 10px 28px -12px rgba(34,197,94,.45); }
+  .card:hover svg { color:#15803d; }
+  .dark .card:hover svg { color:#22c55e; }
+}
 </style>
 </head>
 <body class="font-sans text-neutral-900 dark:text-neutral-100 antialiased">
