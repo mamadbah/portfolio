@@ -59,6 +59,21 @@ section[id] { scroll-margin-top: 5rem; }
   }
   body { padding-bottom: 5rem; }
 }
+
+/* Tap highlight for phones */
+* { -webkit-tap-highlight-color: transparent; }
+.card { transition: border-color .2s, box-shadow .2s, background-color .2s; }
+.card.tap-on { border-color:#15803d; box-shadow:0 10px 28px -12px rgba(21,128,61,.45); }
+.dark .card.tap-on { border-color:#22c55e; box-shadow:0 10px 28px -12px rgba(34,197,94,.45); }
+.card.tap-on svg { color:#15803d; }
+.dark .card.tap-on svg { color:#22c55e; }
+
+.tile-on { background:#f0fdf4; border-radius:1rem; box-shadow:inset 0 0 0 1px rgba(21,128,61,.35); }
+.dark .tile-on { background:rgba(34,197,94,.12); box-shadow:inset 0 0 0 1px rgba(34,197,94,.4); }
+.tile-on .ico { background-color:#15803d !important; color:#15803d !important; }
+.dark .tile-on .ico { background-color:#22c55e !important; color:#22c55e !important; }
+.tile-on .badge { color:#15803d !important; border-color:#15803d !important; }
+.dark .tile-on .badge { color:#22c55e !important; border-color:#22c55e !important; }
 </style>
 </head>
 <body class="font-sans text-neutral-900 dark:text-neutral-100 antialiased">
@@ -499,6 +514,31 @@ function tick() {
 tick(); setInterval(tick, 1000);
 
 render();
+</script>
+
+<script>
+// Tap-to-highlight on touch screens (desktop keeps normal hover)
+(function () {
+  if (!window.matchMedia('(hover: none)').matches) return;
+  let curCard = null, curTile = null;
+
+  function clearAll() {
+    if (curCard) curCard.classList.remove('tap-on');
+    if (curTile) curTile.classList.remove('tile-on');
+    curCard = curTile = null;
+  }
+
+  document.addEventListener('pointerup', function (e) {
+    const card = e.target.closest('.card');
+    if (!card) { clearAll(); return; }
+    const tile = e.target.closest('.card div[class*="grid"] > *');
+    const same = card === curCard && tile === curTile;
+    clearAll();
+    if (same) return;                       // second tap switches it off
+    card.classList.add('tap-on'); curCard = card;
+    if (tile) { tile.classList.add('tile-on'); curTile = tile; }
+  });
+})();
 </script>
 </body>
 </html>
