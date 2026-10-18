@@ -96,7 +96,7 @@ section[id] { scroll-margin-top: 5rem; }
     <a href="#experience" class="px-[1.2vw] sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_exp">Experience</a>
     <a href="#education" class="px-[1.2vw] sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_edu">Education</a>
     <a href="#contact" class="px-[1.2vw] sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_contact">Contact</a>
-    <a id="resumeLink" href="resume-en.pdf" target="_blank" rel="noopener" class="px-[1.2vw] sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_resume">Resume</a>
+    <a id="resumeLink" href="https://drive.google.com/file/d/1w1lFNiXz0ytJLzeQtk1NAptaBn8nkA88/view?usp=sharing" target="_blank" rel="noopener" class="px-[1.2vw] sm:px-3 py-1 rounded-full whitespace-nowrap hover:bg-brand-50 dark:hover:bg-white/10" data-i18n="nav_resume">Resume</a>
     <span class="hidden sm:block w-px h-5 bg-black/10 dark:bg-white/10 mx-1"></span>
     <button id="themeBtn" aria-label="Toggle dark mode" class="px-[1.2vw] sm:px-2 py-1 rounded-full hover:bg-brand-50 dark:hover:bg-white/10">
       <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
@@ -467,7 +467,9 @@ let lang = localStorage.getItem('lang') || (navigator.language.startsWith('fr') 
 
 function render() {
   const d = I18N[lang];
-  document.getElementById('resumeLink').href = lang === 'fr' ? 'resume-fr.pdf' : 'resume-en.pdf';
+  document.getElementById('resumeLink').href = lang === 'fr'
+    ? 'https://drive.google.com/file/d/18IM_W-ZqrhObdR1r5Ju3hDW4M5r8ZP4d/view?usp=sharing'
+    : 'https://drive.google.com/file/d/1w1lFNiXz0ytJLzeQtk1NAptaBn8nkA88/view?usp=sharing';
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => { if (d[el.dataset.i18n]) el.textContent = d[el.dataset.i18n]; });
 
