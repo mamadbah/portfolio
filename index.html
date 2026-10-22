@@ -82,6 +82,48 @@ section[id] { scroll-margin-top: 5rem; }
   .card:hover svg { color:#15803d; }
   .dark .card:hover svg { color:#22c55e; }
 }
+
+/* Dark hero */
+.hero-dark {
+  position: relative;
+  color: #fff;
+  background:
+    radial-gradient(55% 50% at 50% 0%, rgba(59,105,200,.35), transparent 70%),
+    #0b1650;
+}
+.hero-dark h1 { color: #fff !important; }
+.hero-dark .text-brand-700 { color: #4ade80 !important; }
+.hero-dark p { color: #cbd5e1 !important; }
+.hero-dark [data-i18n="role_line"] { color: #94a3b8 !important; }
+.hero-dark a[href^="https://cal.com"] { border-color: rgba(255,255,255,.25); color: #fff; }
+.hero-dark a[href^="https://cal.com"]:hover { background: rgba(255,255,255,.08); border-color: #4ade80; }
+
+/* Keep the top-corner text readable while the dark hero is behind it (laptop) */
+@media (min-width: 640px) {
+  body.on-hero #tz, body.on-hero #clock { color: #e2e8f0; }
+  body.on-hero [aria-label="Language"] { border-color: rgba(255,255,255,.3) !important; }
+  body.on-hero .lang-btn:not(.bg-brand-700) { color: #e2e8f0; }
+  body.on-hero .lang-btn:not(.bg-brand-700):hover { color: #166534; }
+}
+/* Navy glass nav bar */
+.mnav {
+  background: rgba(26,35,84,.88) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: #fff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px -12px rgba(0,0,0,.55);
+}
+.mnav a, .mnav button { color: #fff; }
+.mnav a:hover, .mnav button:hover { background: rgba(255,255,255,.12) !important; }
+.mnav > span { background: rgba(255,255,255,.2) !important; }
+
+/* Phones: make the EN/FR + clock pill navy too */
+@media (max-width: 639px) {
+  .topbar > div:last-child { background: rgba(26,35,84,.88) !important; color: #fff; }
+  .topbar > div:last-child [aria-label="Language"] { border-color: rgba(255,255,255,.25) !important; }
+  .topbar > div:last-child .lang-btn:not(.bg-brand-700) { color: #e2e8f0; }
+}
 </style>
 </head>
 <body class="font-sans text-neutral-900 dark:text-neutral-100 antialiased">
@@ -115,7 +157,7 @@ section[id] { scroll-margin-top: 5rem; }
 
 <main>
   <!-- Hero -->
-  <section id="home" class="flex flex-col items-center justify-center text-center px-6 pt-24 pb-8">
+  <section id="home" class="hero-dark flex flex-col items-center justify-center text-center px-6 pt-24 pb-20">
     <a href="https://cal.com/mamadou-djouhe-bah-suhu4i" target="_blank" rel="noopener"
       class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-3 py-1 text-xs mb-10 hover:border-brand-600 hover:bg-brand-50 dark:hover:bg-white/5 transition">
       <span class="relative flex w-2 h-2">
@@ -548,6 +590,18 @@ render();
     card.classList.add('tap-on'); curCard = card;
     if (tile) { tile.classList.add('tile-on'); curTile = tile; }
   });
+})();
+</script>
+<script>
+// Switch the corner text (timezone, clock, EN/FR) to light while the dark hero is behind it
+(function () {
+  const hero = document.getElementById('home');
+  function update() {
+    document.body.classList.toggle('on-hero', hero.getBoundingClientRect().bottom > 40);
+  }
+  addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update);
+  update();
 })();
 </script>
 </body>
